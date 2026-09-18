@@ -18,6 +18,13 @@ ALLOWED_ATTRIBUTES: dict[str, list[str]] = {}
 # Control characters except \n and \t
 _CONTROL_CHARS = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
 
+# Dangerous tags whose *content* must also be removed (bleach.clean only
+# strips the tags themselves, leaving raw JS/CSS text behind).
+_DANGEROUS_BLOCKS = re.compile(
+    r"<(script|style)\b[^>]*>.*?</\1>",
+    re.IGNORECASE | re.DOTALL,
+)
+
 
 def sanitize_text(value: str | None, *, max_length: int = 2000) -> str:
     """Strip HTML/control chars and clamp length.
@@ -27,8 +34,11 @@ def sanitize_text(value: str | None, *, max_length: int = 2000) -> str:
     """
     if not value:
         return ""
+    # Drop <script>/<style> blocks *including their contents* first, so that
+    # leftover JavaScript/CSS text does not survive bleach.clean(strip=True).
+    text = _DANGEROUS_BLOCKS.sub("", str(value))
     cleaned = bleach.clean(
-        str(value),
+        text,
         tags=ALLOWED_TAGS,
         attributes=ALLOWED_ATTRIBUTES,
         strip=True,
