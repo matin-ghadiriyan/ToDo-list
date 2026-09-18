@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}همه کارها{% endblock %}
+{% block page_title %}🗂️ همه کارها{% endblock %}
+
+{% block content %}
+<form class="filters" method="GET" action="{{ url_for('tasks.list_tasks') }}">
+  <div class="search-box">
+    <span>🔍</span>
+    <input type="text" name="q" value="{{ q }}" placeholder="جستجو در عنوان و توضیحات..." />
+  </div>
+
+  <select name="status">
+    <option value="all" {% if status == 'all' %}selected{% endif %}>همه وضعیت‌ها</option>
+    <option value="pending" {% if status == 'pending' %}selected{% endif %}>در انتظار</option>
+    <option value="done" {% if status == 'done' %}selected{% endif %}>انجام‌شده</option>
+  </select>
+
+  <select name="priority">
+    <option value="all" {% if priority == 'all' %}selected{% endif %}>همه اولویت‌ها</option>
+    <option value="high" {% if priority == 'high' %}selected{% endif %}>زیاد</option>
+    <option value="normal" {% if priority == 'normal' %}selected{% endif %}>معمولی</option>
+    <option value="low" {% if priority == 'low' %}selected{% endif %}>کم</option>
+  </select>
+
+  <button type="submit" class="btn btn-primary">اعمال</button>
+  <a class="btn btn-ghost" href="{{ url_for('tasks.list_tasks') }}">پاک‌سازی</a>
+</form>
+
+{% if tasks %}
+<div class="task-grid">
+  {% for task in tasks %}
+  <article class="task-card {% if task.done %}done{% endif %} priority-{{ task.priority }}">
+    <header class="task-card-head">
+      <form method="POST" action="{{ url_for('tasks.toggle', task_id=task.id) }}">
+        <button class="check" type="submit" aria-label="تغییر وضعیت">
+          {% if task.done %}✓{% endif %}
+        </button>
+      </form>
+      <span class="badge badge-{{ task.priority }}">
+        {% if task.priority == 'high' %}زیاد{% elif task.priority == 'low' %}کم{% else %}معمولی{% endif %}
+      </span>
+    </header>
+
+    <h3 class="task-title">{{ task.title }}</h3>
+    {% if task.description %}
+    <p class="task-desc">{{ task.description }}</p>
+    {% endif %}
+
+    <footer class="task-card-foot">
+      <span class="meta">📅 {{ task.due_date | fa_date }}</span>
+      <div class="actions">
+        <a class="icon-btn" href="{{ url_for('tasks.edit', task_id=task.id) }}" title="ویرایش">✏️</a>
+        <form method="POST" action="{{ url_for('tasks.delete', task_id=task.id) }}"
+              onsubmit="return confirm('این کار حذف شود؟');">
+          <button class="icon-btn danger" type="submit" title="حذف">🗑️</button>
+        </form>
+      </div>
+    </footer>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <p>هیچ کاری پیدا نشد. 🤔</p>
+  <a class="btn btn-primary" href="{{ url_for('tasks.create') }}">افزودن کار جدید</a>
+</div>
+{% endif %}
+{% endblock %}

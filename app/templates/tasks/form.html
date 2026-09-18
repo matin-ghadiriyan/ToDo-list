@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'ویرایش کار' if task else 'کار جدید' }}{% endblock %}
+{% block page_title %}{{ '✏️ ویرایش کار' if task else '➕ افزودن کار جدید' }}{% endblock %}
+
+{% block content %}
+<div class="form-card">
+  <form method="POST" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="field">
+      {{ form.title.label }}
+      {{ form.title(class="input", placeholder="مثلاً: خرید نان") }}
+      {% for error in form.title.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+    </div>
+
+    <div class="field">
+      {{ form.description.label }}
+      {{ form.description(class="input", rows="4", placeholder="توضیحات بیشتر (اختیاری)") }}
+      {% for error in form.description.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        {{ form.priority.label }}
+        {{ form.priority(class="input") }}
+      </div>
+      <div class="field">
+        {{ form.due_date.label }}
+        {{ form.due_date(class="input", type="date") }}
+        {% for error in form.due_date.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">{{ 'ذخیره تغییرات' if task else 'افزودن کار' }}</button>
+      <a class="btn btn-ghost" href="{{ url_for('tasks.list_tasks') }}">انصراف</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

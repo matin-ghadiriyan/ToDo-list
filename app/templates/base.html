@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="مدیریت کارهای روزانه — ساخته‌شده با Flask" />
+  <title>{% block title %}داشبورد{% endblock %} · تسک‌یار</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✅</text></svg>" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <span class="brand-logo">✅</span>
+        <span class="brand-name">تسک‌یار</span>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-item {% if request.endpoint == 'main.dashboard' %}active{% endif %}"
+           href="{{ url_for('main.dashboard') }}">
+          <span class="nav-icon">📊</span> داشبورد
+        </a>
+        <a class="nav-item {% if request.endpoint == 'tasks.list_tasks' %}active{% endif %}"
+           href="{{ url_for('tasks.list_tasks') }}">
+          <span class="nav-icon">🗂️</span> همه کارها
+        </a>
+        <a class="nav-item {% if request.endpoint == 'tasks.today' %}active{% endif %}"
+           href="{{ url_for('tasks.today') }}">
+          <span class="nav-icon">📅</span> کارهای امروز
+        </a>
+        <a class="nav-item {% if request.endpoint == 'tasks.create' %}active{% endif %}"
+           href="{{ url_for('tasks.create') }}">
+          <span class="nav-icon">➕</span> افزودن کار
+        </a>
+        <a class="nav-item {% if request.endpoint == 'main.about' %}active{% endif %}"
+           href="{{ url_for('main.about') }}">
+          <span class="nav-icon">ℹ️</span> درباره
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p>ساخته‌شده با ❤️ و Flask</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="منو">☰</button>
+        <h1 class="page-title">{% block page_title %}{% endblock %}</h1>
+        <a class="btn btn-primary btn-sm" href="{{ url_for('tasks.create') }}">
+          <span>➕</span> کار جدید
+        </a>
+      </header>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-container">
+            {% for category, message in messages %}
+              <div class="flash flash-{{ category }}">
+                <span>{{ message }}</span>
+                <button class="flash-close" onclick="this.parentElement.remove()">×</button>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="content">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

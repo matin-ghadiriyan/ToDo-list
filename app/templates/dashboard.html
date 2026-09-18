@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}داشبورد{% endblock %}
+{% block page_title %}📊 داشبورد{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-text">
+    <h2>سلام! 👋</h2>
+    <p>امروز چه کارهایی رو باید انجام بدی؟ بیا با هم منظمش کنیم.</p>
+    <a class="btn btn-primary" href="{{ url_for('tasks.create') }}">شروع کن</a>
+  </div>
+  <div class="hero-ring">
+    <svg viewBox="0 0 120 120" class="progress-ring">
+      <circle class="ring-bg" cx="60" cy="60" r="52" />
+      <circle class="ring-fg" cx="60" cy="60" r="52"
+              style="stroke-dashoffset: {{ 327 - (327 * stats.progress / 100) }}" />
+    </svg>
+    <div class="ring-label">
+      <strong>{{ stats.progress }}%</strong>
+      <span>پیشرفت</span>
+    </div>
+  </div>
+</section>
+
+<section class="stats-grid">
+  <div class="stat-card">
+    <span class="stat-icon">📋</span>
+    <div><strong>{{ stats.total }}</strong><span>کل کارها</span></div>
+  </div>
+  <div class="stat-card success">
+    <span class="stat-icon">✅</span>
+    <div><strong>{{ stats.done }}</strong><span>انجام‌شده</span></div>
+  </div>
+  <div class="stat-card warning">
+    <span class="stat-icon">⏳</span>
+    <div><strong>{{ stats.pending }}</strong><span>در انتظار</span></div>
+  </div>
+  <div class="stat-card info">
+    <span class="stat-icon">📅</span>
+    <div><strong>{{ stats.today }}</strong><span>امروز</span></div>
+  </div>
+  <div class="stat-card danger">
+    <span class="stat-icon">⚠️</span>
+    <div><strong>{{ stats.overdue }}</strong><span>عقب‌افتاده</span></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <h3>آخرین کارها</h3>
+    <a class="link" href="{{ url_for('tasks.list_tasks') }}">مشاهده همه ←</a>
+  </div>
+
+  {% if recent %}
+  <ul class="mini-list">
+    {% for task in recent %}
+    <li class="mini-item {% if task.done %}done{% endif %}">
+      <span class="mini-dot {{ task.priority }}"></span>
+      <span class="mini-title">{{ task.title }}</span>
+      <span class="mini-date">{{ task.created_at | fa_date }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="empty-state">
+    <p>هنوز کاری ثبت نشده. بیا اولین کارت رو بسازیم! 🚀</p>
+    <a class="btn btn-primary" href="{{ url_for('tasks.create') }}">افزودن کار</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
