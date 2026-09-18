@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}درخواست بیش از حد{% endblock %}
+{% block page_title %}⏳ درخواست بیش از حد{% endblock %}
+
+{% block content %}
+<div class="empty-state">
+  <h2 style="font-size:4rem;margin:0;">۴۲۹</h2>
+  <p>تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً چند لحظه صبر کنید.</p>
+  <a class="btn btn-primary" href="{{ url_for('main.dashboard') }}">بازگشت به داشبورد</a>
+</div>
+{% endblock %}

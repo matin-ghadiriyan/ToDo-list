@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}خطای سرور{% endblock %}
+{% block page_title %}💥 خطای سرور{% endblock %}
+
+{% block content %}
+<div class="empty-state">
+  <h2 style="font-size:4rem;margin:0;">۵۰۰</h2>
+  <p>مشکلی در سرور رخ داده است. لطفاً بعداً دوباره تلاش کنید.</p>
+  <a class="btn btn-primary" href="{{ url_for('main.dashboard') }}">بازگشت به داشبورد</a>
+</div>
+{% endblock %}

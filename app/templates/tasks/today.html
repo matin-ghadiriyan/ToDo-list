@@ -17,6 +17,7 @@
       <div class="timeline-head">
         <h3>{{ task.title }}</h3>
         <form method="POST" action="{{ url_for('tasks.toggle', task_id=task.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           <button class="check small" type="submit">{% if task.done %}✓{% endif %}</button>
         </form>
       </div>
@@ -25,6 +26,7 @@
         <a class="link" href="{{ url_for('tasks.edit', task_id=task.id) }}">ویرایش</a>
         <form method="POST" action="{{ url_for('tasks.delete', task_id=task.id) }}"
               onsubmit="return confirm('حذف شود؟');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           <button class="link danger" type="submit">حذف</button>
         </form>
       </div>

@@ -1,25 +1,6 @@
 """Basic tests for the ToDo application."""
-import pytest
-
-from app import create_app
 from app.extensions import db as _db
 from app.models import Task
-
-
-@pytest.fixture()
-def app():
-    """Create a test application with an in-memory database."""
-    test_app = create_app("testing")
-    with test_app.app_context():
-        _db.create_all()
-        yield test_app
-        _db.session.remove()
-        _db.drop_all()
-
-
-@pytest.fixture()
-def client(app):
-    return app.test_client()
 
 
 def test_dashboard_loads(client):
@@ -72,4 +53,5 @@ def test_api_tasks(client, app):
     assert response.status_code == 200
     data = response.get_json()
     assert isinstance(data, list)
+    assert len(data) == 1
     assert data[0]["title"] == "از طریق API"

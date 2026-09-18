@@ -4,13 +4,14 @@ from datetime import date
 from flask import Blueprint, render_template
 from sqlalchemy import func
 
-from ..extensions import db
+from ..extensions import db, limiter
 from ..models import Task
 
 main_bp = Blueprint("main", __name__)
 
 
 @main_bp.route("/")
+@limiter.limit("120 per minute")
 def dashboard():
     """Overview page with statistics and recent tasks."""
     total = db.session.query(func.count(Task.id)).scalar() or 0
@@ -48,6 +49,7 @@ def dashboard():
 
 
 @main_bp.route("/about")
+@limiter.limit("60 per minute")
 def about():
     """About the project."""
     return render_template("about.html")

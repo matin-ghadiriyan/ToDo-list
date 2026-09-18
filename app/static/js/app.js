@@ -1,5 +1,33 @@
 // TaskFlow client-side interactions
 
+/**
+ * Read the CSRF token that Flask-WTF renders into every page.
+ * Used for fetch() requests to the JSON API.
+ */
+function getCsrfToken() {
+  const meta = document.querySelector('meta[name="csrf-token"]');
+  if (meta) return meta.getAttribute('content');
+  const input = document.querySelector('input[name="csrf_token"]');
+  return input ? input.value : '';
+}
+
+/**
+ * Wrapper around fetch() that automatically attaches the CSRF header
+ * for state-changing requests.
+ */
+async function secureFetch(url, options = {}) {
+  const opts = { credentials: 'same-origin', ...options };
+  const method = (opts.method || 'GET').toUpperCase();
+  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+    opts.headers = {
+      'X-CSRFToken': getCsrfToken(),
+      'Content-Type': 'application/json',
+      ...(opts.headers || {}),
+    };
+  }
+  return fetch(url, opts);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Mobile sidebar ---------- */
   const sidebar = document.getElementById('sidebar');

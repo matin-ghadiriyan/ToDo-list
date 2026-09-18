@@ -32,6 +32,7 @@
   <article class="task-card {% if task.done %}done{% endif %} priority-{{ task.priority }}">
     <header class="task-card-head">
       <form method="POST" action="{{ url_for('tasks.toggle', task_id=task.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <button class="check" type="submit" aria-label="تغییر وضعیت">
           {% if task.done %}✓{% endif %}
         </button>
@@ -52,6 +53,7 @@
         <a class="icon-btn" href="{{ url_for('tasks.edit', task_id=task.id) }}" title="ویرایش">✏️</a>
         <form method="POST" action="{{ url_for('tasks.delete', task_id=task.id) }}"
               onsubmit="return confirm('این کار حذف شود؟');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           <button class="icon-btn danger" type="submit" title="حذف">🗑️</button>
         </form>
       </div>
