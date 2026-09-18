@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}{{ 'ویرایش کار' if task else 'کار جدید' }}{% endblock %}
 {% block page_title %}{{ '✏️ ویرایش کار' if task else '➕ افزودن کار جدید' }}{% endblock %}
+{% block page_subtitle %}{{ 'تغییر اطلاعات این کار' if task else 'یک کار تازه به فهرست اضافه کن' }}{% endblock %}
 
 {% block content %}
 <div class="form-card">
